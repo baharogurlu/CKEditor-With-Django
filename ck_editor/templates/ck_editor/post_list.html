@@ -1,0 +1,134 @@
+{% extends "ck_editor/base.html" %}
+{% load staticfiles %}
+{% block body_block %}
+<div class="col-md-9 col-md-offset-1">
+  <fieldset>
+    <section>
+
+    </section>
+</fieldset>
+</div>
+{% block content %}
+  <h1 class="page-header">Posts</h1>
+
+  <p>
+    <button type="button" class="btn btn-primary js-create-post" data-target="#modal-post" data-url="{% url 'ck_editor:post_create' %}">
+      <span class="glyphicon glyphicon-plus"></span>
+      New Post
+    </button>
+  </p>
+
+  <table class="table" id="post-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Content</th>
+        <th>Description</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% include 'ck_editor/includes/partial_post_list.html' %}
+    </tbody>
+  </table>
+
+
+
+  <div class="modal fade" id="modal-post" aria-labelledby="modal-post-label">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% endblock %}
+{% block javascript %}
+<script>
+
+    $( document ).ready( function() {
+
+      var loadForm = function () {
+      var btn = $(this);
+      $.ajax({
+        url: btn.attr("data-url"),
+        type: 'get',
+        dataType: 'json',
+        beforeSend: function () {
+          $("#modal-post .modal-content").html("");
+          $("#modal-post").modal("show");
+        },
+        success: function (data) {
+          $("#modal-post .modal-content").html(data.html_form);
+          if(data.form_fields){
+            getRichText(data.form_fields);
+          }
+        }
+      });
+    };
+
+    var saveForm = function () {
+      var form = $(this);
+      $.ajax({
+        url: form.attr("action"),
+        data: form.serialize(),
+        type: form.attr("method"),
+        dataType: 'json',
+        success: function (data) {
+          if (data.form_is_valid) {
+            $("#post-table tbody").html(data.html_post_list);
+            $("#modal-post").modal("hide");
+          }
+          else {
+            $("#modal-post .modal-content").html(data.html_form);
+          }
+        },
+        error :function (err) {
+          console.log(err)
+        }
+      });
+      return false;
+    };
+
+
+    function getRichText(ids){
+      CKEDITOR.disableAutoInline = true;
+      var i;
+      for (i = 0; i < ids.length; i++) {
+           CKEDITOR.replace( ids[i],{
+              filebrowserBrowseUrl: '/ckeditor/browse/browse.php',
+              filebrowserImageBrowseUrl: '/ckeditor/browse/browse.php?type=Images',
+              filebrowserUploadUrl: '/ckeditor/upload/upload.php',
+              filebrowserImageUploadUrl: '/ckeditor/upload/upload.php?type=Images'
+           });
+      }
+    }
+
+    /* Binding */
+
+    // Create Post
+    $(".js-create-post").click(loadForm);
+    $("#modal-post").on("submit", ".js-post-create-form", saveForm);
+
+    // Update post
+    $("#post-table").on("click", ".js-update-post", loadForm);
+    $("#modal-post").on("submit", ".js-post-update-form", saveForm);
+
+    // Delete post
+    $("#post-table").on("click", ".js-delete-post", loadForm);
+    $("#modal-post").on("submit", ".js-post-delete-form", saveForm);
+
+    });
+
+
+</script>
+{% endblock %}
+
+
+
+
+
+
+

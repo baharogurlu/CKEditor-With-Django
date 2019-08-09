@@ -1,0 +1,23 @@
+{% for post in posts %}
+  <tr>
+    <td>{{ post.id }}</td>
+    <td><p>{{ post.content|safe }}</p></td>
+     <td><p>{{ post.description|safe}}</p></td>
+    <td width="%20">
+      <button type="button"
+              class="btn btn-warning btn-sm pull-right js-update-post"
+              data-url="{% url 'ck_editor:post_update' post.id %}">
+        <span class="glyphicon glyphicon-pencil"></span> Edit
+      </button>
+      <button type="button"
+              class="btn btn-danger btn-sm pull-right js-delete-post"
+              data-url="{% url 'ck_editor:post_delete' post.id %}">
+        <span class="glyphicon glyphicon-trash"></span> Delete
+      </button>
+    </td>
+  </tr>
+{% empty %}
+  <tr>
+    <td colspan="2" class="text-center bg-warning">No Post</td>
+  </tr>
+{% endfor %}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href = "{% static 'ck_editor/vendor/bootstrap-3.3.7/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href = "{% static 'ck_editor/vendor/bootstrap-3.3.7/css/bootstrap-theme.min.css' %}">
+
+    <title>Index</title>
+
+        <script type="text/javascript" src="{% static 'ck_editor/vendor/jquery-3.2.1/js/jquery-3.2.1.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+        <script type="text/javascript" src="{% static 'ckeditor/ckeditor/adapters/jquery.js' %}"></script>
+        <script type="text/javascript" src="{% static 'ck_editor/vendor/bootstrap-3.3.7/js/bootstrap.min.js' %}"></script>
+
+
+</head>
+<body>
+
+<div class="wrapper">
+
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <a class="navbar-brand"  href="{% url 'ck_editor:index' %}">CKEditor App</a>
+            </div>
+
+           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+                  <li><a href="{% url 'ck_editor:post_list' %}">Post List</a></li>
+              </ul>
+            </div>
+          </div><!-- /.container-fluid -->
+        </nav>
+
+        <div class="row">
+            <div class="col-md-12">
+                {% block body_block %}
+
+                {% endblock %}
+                {% block pagination %}
+
+                {% endblock %}
+            </div>
+
+        </div>
+
+
+    <footer class="bs-docs-footer navbar-fixed-bottom">
+      <div class="container">
+      </div>
+    </footer>
+
+
+</div>
+
+
+    {% block javascript %}
+    {% endblock %}
+
+</body>
+</html>
